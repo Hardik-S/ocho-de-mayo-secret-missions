@@ -1,0 +1,25 @@
+# Dependencies and package-manager byproducts
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Vite and TypeScript build output
+dist/
+*.tsbuildinfo
+
+# Local environment files: this app is designed to run without secrets.
+.env
+.env.*
+!.env.example
+
+# Editor and OS noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Local test/cache artifacts
+coverage/
+.vitest/

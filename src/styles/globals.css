@@ -1,0 +1,444 @@
+/*
+  Secret Missions: Ocho Edition global design system.
+  This file is intentionally self-contained because package/config ownership is
+  outside Worker 3. Components use semantic class names so later app/data work
+  can compose the primitives without changing this styling contract.
+*/
+
+:root {
+  color-scheme: light;
+
+  /* Warm dinner-party palette: festive without relying on stereotypes. */
+  --color-ink: #2c211c;
+  --color-ink-soft: #5e4a41;
+  --color-muted: #7d665a;
+  --color-bg: #fff7ec;
+  --color-bg-warm: #fbe8cf;
+  --color-surface: #fffaf2;
+  --color-surface-strong: #ffffff;
+  --color-border: rgba(93, 62, 40, 0.15);
+  --color-accent: #b84c2f;
+  --color-accent-strong: #8e351f;
+  --color-accent-soft: #f5c7aa;
+  --color-gold: #d99b3d;
+  --color-green: #4f7c5b;
+  --color-red: #a9352a;
+  --color-shadow: rgba(88, 52, 25, 0.18);
+  --color-focus: #1f6f8b;
+
+  --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --radius-sm: 14px;
+  --radius-md: 20px;
+  --radius-lg: 28px;
+  --shadow-soft: 0 18px 50px var(--color-shadow);
+  --shadow-card: 0 14px 34px rgba(88, 52, 25, 0.14);
+  --container-max: 760px;
+  --touch-target: 44px;
+  --motion-fast: 160ms ease;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  background:
+    radial-gradient(circle at top left, rgba(217, 155, 61, 0.2), transparent 32rem),
+    linear-gradient(135deg, var(--color-bg), var(--color-bg-warm));
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.18) 1px, transparent 1px),
+    linear-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px),
+    radial-gradient(circle at 80% 0%, rgba(184, 76, 47, 0.12), transparent 24rem);
+  background-size: 18px 18px, 18px 18px, auto;
+  color: var(--color-ink);
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  color: inherit;
+}
+
+a {
+  color: var(--color-accent-strong);
+  text-underline-offset: 0.18em;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+::selection {
+  background: var(--color-accent-soft);
+  color: var(--color-ink);
+}
+
+.app-shell {
+  width: min(100%, var(--container-max));
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 24px 18px 28px;
+}
+
+.app-header {
+  padding: 14px 2px 22px;
+}
+
+.app-header__eyebrow {
+  margin: 0 0 8px;
+  color: var(--color-accent-strong);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.app-header__title {
+  max-width: 12ch;
+  margin: 0;
+  color: var(--color-ink);
+  font-size: clamp(2.15rem, 14vw, 4.75rem);
+  font-weight: 900;
+  letter-spacing: 0;
+  line-height: 0.9;
+}
+
+.app-main {
+  display: grid;
+  gap: 16px;
+}
+
+.app-footer {
+  padding: 28px 2px 0;
+  color: var(--color-muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.ui-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.88), rgba(255, 250, 242, 0.94)),
+    radial-gradient(circle at 16% 8%, rgba(217, 155, 61, 0.12), transparent 15rem);
+  box-shadow: var(--shadow-card);
+  color: var(--color-ink);
+}
+
+.ui-card::before {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+  background:
+    linear-gradient(90deg, rgba(44, 33, 28, 0.025) 1px, transparent 1px),
+    linear-gradient(rgba(44, 33, 28, 0.018) 1px, transparent 1px);
+  background-size: 10px 10px;
+  mix-blend-mode: multiply;
+}
+
+.ui-card > * {
+  position: relative;
+}
+
+.ui-card--sunny {
+  background:
+    linear-gradient(135deg, rgba(255, 248, 229, 0.96), rgba(255, 239, 206, 0.94)),
+    radial-gradient(circle at top right, rgba(184, 76, 47, 0.12), transparent 14rem);
+}
+
+.ui-card--quiet {
+  background:
+    linear-gradient(135deg, rgba(255, 252, 247, 0.96), rgba(253, 241, 224, 0.92));
+}
+
+.ui-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--touch-target);
+  padding: 0.72rem 1rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 0.98rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  line-height: 1.1;
+  text-align: center;
+  text-decoration: none;
+  transition:
+    transform var(--motion-fast),
+    box-shadow var(--motion-fast),
+    background-color var(--motion-fast),
+    border-color var(--motion-fast);
+}
+
+.ui-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.ui-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.ui-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
+.ui-button--primary {
+  background: var(--color-accent);
+  box-shadow: 0 10px 22px rgba(184, 76, 47, 0.22);
+  color: #fffaf2;
+}
+
+.ui-button--secondary {
+  border-color: rgba(184, 76, 47, 0.28);
+  background: rgba(255, 250, 242, 0.78);
+  color: var(--color-accent-strong);
+}
+
+.ui-button--ghost {
+  background: transparent;
+  color: var(--color-accent-strong);
+}
+
+.ui-button--full {
+  width: 100%;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0.3rem 0.62rem;
+  border: 1px solid rgba(44, 33, 28, 0.08);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--color-ink-soft);
+  font-size: 0.76rem;
+  font-weight: 850;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.status-badge--pending {
+  background: rgba(217, 155, 61, 0.18);
+  color: #7b5015;
+}
+
+.status-badge--active {
+  background: rgba(184, 76, 47, 0.14);
+  color: var(--color-accent-strong);
+}
+
+.status-badge--complete {
+  background: rgba(79, 124, 91, 0.16);
+  color: #315f3d;
+}
+
+.status-badge--locked {
+  background: rgba(44, 33, 28, 0.1);
+  color: var(--color-muted);
+}
+
+.mission-card,
+.qr-panel,
+.award-card {
+  padding: 18px;
+}
+
+.mission-card {
+  display: grid;
+  gap: 18px;
+}
+
+.mission-card__topline,
+.award-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.mission-card__meta {
+  color: var(--color-muted);
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.mission-card__content {
+  display: grid;
+  gap: 8px;
+}
+
+.mission-card__title,
+.award-card__title,
+.qr-panel__title {
+  margin: 0;
+  color: var(--color-ink);
+  font-weight: 900;
+  letter-spacing: 0;
+  line-height: 1.05;
+}
+
+.mission-card__title {
+  font-size: clamp(1.35rem, 8vw, 2.2rem);
+}
+
+.mission-card__description,
+.award-card__description,
+.qr-panel__description,
+.award-card__recipient {
+  margin: 0;
+  color: var(--color-ink-soft);
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+.qr-panel {
+  display: grid;
+  gap: 18px;
+  text-align: center;
+}
+
+.qr-panel__copy {
+  display: grid;
+  gap: 8px;
+}
+
+.qr-panel__title,
+.award-card__title {
+  font-size: clamp(1.25rem, 7vw, 1.9rem);
+}
+
+.qr-panel__code {
+  display: grid;
+  place-items: center;
+  min-height: 212px;
+  padding: 18px;
+  border: 1px dashed rgba(93, 62, 40, 0.22);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.62);
+}
+
+.qr-panel__svg {
+  width: min(176px, 100%);
+  height: auto;
+}
+
+.qr-panel__placeholder {
+  display: grid;
+  place-items: center;
+  width: min(176px, 100%);
+  aspect-ratio: 1;
+  padding: 16px;
+  border-radius: var(--radius-sm);
+  background:
+    linear-gradient(135deg, rgba(44, 33, 28, 0.08), rgba(44, 33, 28, 0.02)),
+    repeating-linear-gradient(45deg, rgba(44, 33, 28, 0.05) 0 8px, transparent 8px 16px);
+  color: var(--color-muted);
+  font-size: 0.88rem;
+  font-weight: 750;
+  line-height: 1.35;
+}
+
+.qr-panel__footer {
+  color: var(--color-muted);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.award-card {
+  display: grid;
+  gap: 20px;
+}
+
+.award-card__icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 18px;
+  background: rgba(184, 76, 47, 0.12);
+  color: var(--color-accent-strong);
+}
+
+.award-card__body {
+  display: grid;
+  gap: 8px;
+}
+
+.award-card__recipient {
+  color: var(--color-accent-strong);
+  font-weight: 850;
+}
+
+@media (min-width: 620px) {
+  .app-shell {
+    padding: 36px 28px 44px;
+  }
+
+  .app-main {
+    gap: 20px;
+  }
+
+  .mission-card,
+  .qr-panel,
+  .award-card {
+    padding: 24px;
+  }
+
+  .qr-panel {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    text-align: left;
+  }
+
+  .qr-panel__footer {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+
+  .ui-button:hover:not(:disabled),
+  .ui-button:active:not(:disabled) {
+    transform: none;
+  }
+}
