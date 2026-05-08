@@ -23,3 +23,5 @@ Thumbs.db
 # Local test/cache artifacts
 coverage/
 .vitest/
+
+.vercel
