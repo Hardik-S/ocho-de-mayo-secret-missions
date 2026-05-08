@@ -5,7 +5,7 @@ import { missions } from "./data/missions";
 import { assignMissions, normalizeName, slugName } from "./utils/assignment";
 import { decodeGame, encodeGame } from "./utils/encoding";
 import { STORAGE_KEYS } from "./utils/storage";
-import type { Mission } from "./types";
+import type { EncodedGame, Mission } from "./types";
 import Awards from "./screens/Awards";
 import HostSetup from "./screens/HostSetup";
 import HowToPlay from "./screens/HowToPlay";
@@ -55,12 +55,63 @@ function safeWrite<T>(key: string, value: T) {
 }
 
 function encodeSession(session: GameSession): string {
-  return encodeGame(session);
+  const encodedGame: EncodedGame = {
+    version: 1,
+    eventTitle: session.eventTitle,
+    subtitle: session.subtitle,
+    seed: session.seed,
+    createdAt: session.createdAt,
+    options: session.options,
+    assignments: session.assignments.map((assignment) => ({
+      playerName: assignment.playerName,
+      playerSlug: assignment.playerSlug,
+      missionId: assignment.missionId,
+      targetPlayerName: assignment.targetPlayerName,
+      targetPlayerSlug: assignment.targetPlayerSlug,
+      secondaryMissionText: assignment.secondaryMissionText,
+    })) as EncodedGame["assignments"],
+  };
+
+  return encodeGame(encodedGame);
 }
 
 function decodeSession(encoded: string): GameSession | null {
   try {
-    return decodeGame(encoded) as GameSession;
+    const decoded = decodeGame(encoded);
+    const hydratedAssignments = decoded.assignments.map((assignment) => {
+      const mission = missions.find((candidate) => candidate.id === assignment.missionId) ?? missions[0];
+
+      return {
+        ...assignment,
+        missionTitle: assignment.missionTitle ?? mission.title,
+        missionText: assignment.missionText ?? mission.text,
+        missionCategory: assignment.missionCategory ?? mission.category,
+        difficulty: assignment.difficulty ?? mission.difficulty,
+        completionCondition: assignment.completionCondition ?? mission.completionCondition,
+        hint: assignment.hint ?? mission.hint,
+        awardTag: assignment.awardTag ?? mission.awardTag,
+        secondaryMissionText:
+          assignment.secondaryMissionText ??
+          `Create one tiny, kind moment involving ${assignment.targetPlayerName}.`,
+        status: assignment.status ?? "active",
+      };
+    });
+
+    return {
+      ...decoded,
+      gameId: `ocho-${decoded.seed}`,
+      assignments: hydratedAssignments,
+      roster: decoded.assignments.map((assignment) => ({
+        id: assignment.playerSlug,
+        name: assignment.playerName,
+        slug: assignment.playerSlug,
+      })),
+      missions: missions as Mission[],
+      settings: {
+        ...defaultSettings,
+        ...decoded.options,
+      },
+    };
   } catch {
     return null;
   }

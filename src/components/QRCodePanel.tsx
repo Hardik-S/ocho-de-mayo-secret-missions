@@ -1,4 +1,5 @@
-import { Suspense, lazy, type ComponentType, type ReactNode } from "react";
+import type { ReactNode } from "react";
+import QRCode from "react-qr-code";
 import { Card } from "./Card";
 
 type QRCodePanelProps = {
@@ -9,13 +10,6 @@ type QRCodePanelProps = {
   footer?: ReactNode;
 };
 
-type OptionalQRCodeProps = {
-  value: string;
-  size: number;
-  className?: string;
-  "aria-label"?: string;
-};
-
 function QRPlaceholder({ message }: { message: string }) {
   return (
     <div className="qr-panel__placeholder" role="status">
@@ -23,24 +17,6 @@ function QRPlaceholder({ message }: { message: string }) {
     </div>
   );
 }
-
-/**
- * react-qr-code is treated as an optional peer for this slice because the
- * package manifest is outside this worker's ownership. If it is unavailable in
- * a consuming app, the panel still renders copy and a calm fallback surface.
- */
-const qrCodePackage = "react-qr-code";
-
-const OptionalQRCode = lazy(async () => {
-  try {
-    const module = await import(/* @vite-ignore */ qrCodePackage);
-    return { default: module.default as ComponentType<OptionalQRCodeProps> };
-  } catch {
-    return {
-      default: () => <QRPlaceholder message="QR code renderer unavailable" />,
-    };
-  }
-});
 
 export function QRCodePanel({
   value,
@@ -59,14 +35,12 @@ export function QRCodePanel({
       </div>
       <div className="qr-panel__code" aria-live="polite">
         {hasValue ? (
-          <Suspense fallback={<QRPlaceholder message="Preparing QR code" />}>
-            <OptionalQRCode
-              aria-label="QR code"
-              className="qr-panel__svg"
-              size={176}
-              value={value.trim()}
-            />
-          </Suspense>
+          <QRCode
+            aria-label="QR code"
+            className="qr-panel__svg"
+            size={176}
+            value={value.trim()}
+          />
         ) : (
           <QRPlaceholder message={emptyMessage} />
         )}

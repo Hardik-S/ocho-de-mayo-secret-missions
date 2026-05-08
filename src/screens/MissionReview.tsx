@@ -1,9 +1,11 @@
-import type { CSSProperties } from "react";
+import { useState, type CSSProperties } from "react";
 import { QRCodePanel } from "../components/QRCodePanel";
 import type { ScreenProps } from "./screenTypes";
 import { Button, RosterChips, ScreenFrame } from "./shared";
 
 export default function MissionReview({ session, joinUrl, navigate }: ScreenProps) {
+  const [showSpoilers, setShowSpoilers] = useState(false);
+
   if (!session) {
     return (
       <ScreenFrame title="No host session" actions={<Button onClick={() => navigate("/host")}>Set up host</Button>}>
@@ -30,18 +32,36 @@ export default function MissionReview({ session, joinUrl, navigate }: ScreenProp
           <p style={mutedStyle}>The encoded game lives after `#/join?g=`, so Vercel static hosting can serve it.</p>
         </section>
         <section style={panelStyle}>
-          <h2>Mission cards</h2>
-          <div style={missionGridStyle}>
-            {session.assignments.map((assignment) => (
-              <details key={assignment.playerSlug} style={detailStyle}>
-                <summary>
-                  <strong>{assignment.playerName}</strong>: {assignment.missionTitle}
-                </summary>
-                <p>{assignment.missionText}</p>
-                <p style={mutedStyle}>Secondary with {assignment.targetPlayerName}: {assignment.secondaryMissionText}</p>
-              </details>
-            ))}
-          </div>
+          <h2>Spoiler controls</h2>
+          {!showSpoilers ? (
+            <div style={warningStyle}>
+              <strong>Warning: this reveals private player missions.</strong>
+              <p>
+                Keep this closed during setup unless the host needs to audit or troubleshoot
+                assignments. Guests should not see this section.
+              </p>
+              <Button variant="danger" onClick={() => setShowSpoilers(true)}>
+                Show mission spoilers
+              </Button>
+            </div>
+          ) : (
+            <div style={missionGridStyle}>
+              <Button variant="secondary" onClick={() => setShowSpoilers(false)}>
+                Hide mission spoilers
+              </Button>
+              {session.assignments.map((assignment) => (
+                <details key={assignment.playerSlug} style={detailStyle}>
+                  <summary>
+                    <strong>{assignment.playerName}</strong>: {assignment.missionTitle}
+                  </summary>
+                  <p>{assignment.missionText}</p>
+                  <p style={mutedStyle}>
+                    Secondary with {assignment.targetPlayerName}: {assignment.secondaryMissionText}
+                  </p>
+                </details>
+              ))}
+            </div>
+          )}
         </section>
       </div>
     </ScreenFrame>
@@ -80,4 +100,13 @@ const detailStyle: CSSProperties = {
   padding: 12,
   borderRadius: 8,
   background: "#fff7ea",
+};
+
+const warningStyle: CSSProperties = {
+  display: "grid",
+  gap: 10,
+  padding: 14,
+  borderRadius: 8,
+  background: "#fff7ea",
+  border: "1px solid #e8b13f",
 };
